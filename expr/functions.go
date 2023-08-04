@@ -246,9 +246,11 @@ func NewScalarFunc(reg ExtensionRegistry, id extensions.ID, opts []*types.Functi
 		return nil, err
 	}
 
+	fullId := extensions.ID{URI: id.URI, Name: decl.CompoundName()}
+
 	return &ScalarFunction{
-		funcRef:     reg.GetFuncAnchor(id),
-		id:          id,
+		funcRef:     reg.GetFuncAnchor(fullId),
+		id:          fullId,
 		declaration: decl,
 		outputType:  outType,
 		options:     opts,
