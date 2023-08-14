@@ -60,7 +60,7 @@ func ExampleExpression_scalarFunction() {
 				"extensionFunction": {
 					"extensionUriReference": 1,
 					"functionAnchor": 2,
-					"name": "add"
+					"name": "add:i32_i32"
 				}
 			}
 		],
@@ -105,7 +105,7 @@ func ExampleExpression_scalarFunction() {
 	// having to construct the protobuf
 	const substraitext = `https://github.com/substrait-io/substrait/blob/main/extensions/functions_arithmetic.yaml`
 
-	var addVariant = ext.NewScalarFuncVariant(ext.ID{URI: substraitext, Name: "add"})
+	var addVariant = ext.NewScalarFuncVariant(ext.ID{URI: substraitext, Name: "add:i32_i32"})
 
 	var ex expr.Expression
 	refArg, _ := expr.NewRootFieldRef(expr.NewStructFieldRef(0), &types.StructType{Types: []types.Type{&types.Int32Type{}}})
@@ -116,6 +116,11 @@ func ExampleExpression_scalarFunction() {
 	toProto := ex.ToProto()
 
 	// output some info!
+
+	// Print compound name. Should be "add:i32_i32", but it becomes
+	// "add:i32_i32:" because it treats "add:i32_i32" as the simple name, and
+	// the signature as blank, then puts them together with a colon
+	fmt.Println(addVariant.CompoundName())
 
 	// print string represention of the expression
 	fmt.Println(fromProto)
@@ -130,8 +135,9 @@ func ExampleExpression_scalarFunction() {
 	fmt.Println(pb.Equal(&exprProto, toProto))
 
 	// Output:
-	// add(.field(0), fp64(10)) => i32
-	// add(.field(0) => i32, fp64(10)) => i32
+	// add:i32_i32
+	// add:i32_i32(.field(0), fp64(10)) => i32
+	// add:i32_i32(.field(0) => i32, fp64(10)) => i32
 	// true
 	// true
 }
