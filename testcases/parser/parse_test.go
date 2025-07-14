@@ -31,7 +31,7 @@ add(120::i8, 5::i8) = 125::i8
 add(100::i16, 100::i16) = 200::i16
 add(1::i8?, 2::i8?) = 3::i8?
 
-# Overflow examples demonstrating overflow behavior  
+# Overflow examples demonstrating overflow behavior
 add(120::i8, 10::i8) [overflow:ERROR] = <!ERROR>
 `
 
@@ -74,7 +74,7 @@ add(120::i8, 10::i8) [overflow:ERROR] = <!ERROR>
 
 func TestParseDataTimeExample(t *testing.T) {
 	header := makeHeader("v1.0", "/extensions/functions_datetime.yaml")
-	tests := `#  timestamp examples using the timestamp type 
+	tests := `#  timestamp examples using the timestamp type
 lt('2016-12-31T13:30:15'::ts, '2017-12-31T13:30:15'::ts) = true::bool
 `
 	testFile, err := ParseTestCasesFromString(header + tests)
@@ -485,7 +485,7 @@ func createAggregateArg(t *testing.T, tableName, columnName string, columnType t
 
 func TestParseAggregateFuncWithMultipleArgs(t *testing.T) {
 	header := makeAggregateTestHeader("v1.0", "/extensions/functions_arithmetic.yaml")
-	tests := `#  basic 
+	tests := `#  basic
 DEFINE t1(fp32, fp32) = ((20, 20), (-3, -3), (1, 1), (10,10), (5,5.5))
 corr(t1.col0, t1.col1) = 1::fp64
 DEFINE t1(i64, fp32) = ((20, 20), (-3, -3), (1, 1), (10,10), (5,5.5))
@@ -856,7 +856,7 @@ func TestLoadAllSubstraitTestFiles(t *testing.T) {
 	}
 }
 
-func testGetFunctionInvocation(t *testing.T, tc *TestCase, reg *expr.Resolver, registry functions.FunctionRegistry) {
+func testGetFunctionInvocation(t *testing.T, tc *TestCase, reg *expr.ExtensionRegistry, registry functions.FunctionRegistry) {
 	switch tc.FuncType {
 	case ScalarFuncType:
 		invocation, err := tc.GetScalarFunctionInvocation(reg, registry)

@@ -140,7 +140,7 @@ func ExampleExpression_scalarFunction() {
 	// true
 }
 
-func sampleNestedExpr(reg expr.Resolver, substraitExtURI string) expr.Expression {
+func sampleNestedExpr(reg expr.ExtensionRegistry, substraitExtURI string) expr.Expression {
 	var (
 		add = ext.NewScalarFuncVariant(ext.ID{URI: substraitExtURI, Name: "add"})
 		sub = ext.NewScalarFuncVariant(ext.ID{URI: substraitExtURI, Name: "subtract"})
@@ -475,7 +475,7 @@ func TestSubqueryExpressionRoundtrip(t *testing.T) {
 
 	// Create extension registry with subquery handler properly
 	baseReg := expr.NewExtensionRegistry(extSet, c)
-	subqueryReg := &plan.ExpressionResolver{Resolver: baseReg}
+	subqueryReg := &plan.ExpressionResolver{ExtensionRegistry: baseReg}
 
 	// Create a simple mock relation for subqueries - single column of int32
 	mockSchema := types.NamedStruct{
@@ -585,7 +585,7 @@ func TestSubqueryExpressionRoundtrip(t *testing.T) {
 			require.NotNil(t, protoExpr.GetSubquery())
 
 			// Convert back from protobuf using ExprFromProto with subquery handler
-			baseReg.SubqueryResolver = subqueryReg
+			baseReg.SetSubqueryResolver(subqueryReg)
 			fromProto, err := expr.ExprFromProto(protoExpr, baseSchema, baseReg)
 			require.NoError(t, err)
 			require.NotNil(t, fromProto)
